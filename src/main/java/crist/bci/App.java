@@ -1,20 +1,13 @@
 package crist.bci;
 
 import java.sql.SQLException;
-import java.time.Duration;
 import java.util.Scanner;
-import java.util.concurrent.CompletionStage;
-
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-import akka.pattern.Patterns;
 import crist.bci.Compte.Compte;
 import crist.bci.actor.BankActor;
-import crist.bci.actor.BankerActor;
-import crist.bci.actor.ClientActor;
 import crist.bci.actor.CreateActorsBanker;
 import crist.bci.actor.CreateActorsClient;
-import crist.bci.banque.Banque;
 import crist.bci.banquier.Banquier;
 import crist.bci.client.Client;
 import crist.bci.database.Database;
@@ -38,10 +31,55 @@ public class App {
         ModelCompte modelCompte = new ModelCompte(db);
         ActorSystem system = ActorSystem.create("BankSystem");
         ActorRef bankActor = system.actorOf(BankActor.props(), "bankActor");
-    
-       sysconnexion("client", bankActor, con);
-       sysconnexion("banquier", bankActor, con);
-      
+
+        sysconnexion("client", bankActor, con);
+        sysconnexion("banquier", bankActor, con);
+        while (true) {
+            Utils.menuClient();
+            System.out.println("Veuillez entrer un chiffre entre 1 et 4.");
+            int choix = scanner.nextInt();
+
+            switch (choix) {
+                case 1:
+                    Utils.menuClient();
+                    System.out.println("Votre solde est de : " +
+                            modelCompte.getCompte(currentClient.getId()).getSolde() + "€");
+
+                    break;
+                case 2:
+
+                    double amount = 0;
+                    System.out.println("Veuillez entrer le montant à déposer :");
+                    while (!scanner.hasNextDouble() || (amount = scanner.nextDouble()) <= 0) {
+                        System.out.println("Veuillez entrer un montant valide");
+                        scanner.nextLine(); // this is important!
+                    }
+                    bankActor.tell(new Operation("depot", amount, currentClient.getId()), ActorRef.noSender());
+
+                    break;
+                case 3:
+                    double amount2 = 0;
+                    System.out.println("Veuillez entrer le montant à retirer :");
+                    while (!scanner.hasNextDouble() || (amount2 = scanner.nextDouble()) <= 0) {
+                        System.out.println("Veuillez entrer un montant valide");
+                        scanner.nextLine(); // this is important!
+                    }
+                    bankActor.tell(new Operation("retrait", amount2, currentClient.getId()), ActorRef.noSender());
+                    break;
+                case 4:
+                System.out.println("Au revoir " + currentClient.getNom() + "" +
+                currentClient.getPrenom() + " au plaisir de vous revoir!");
+                system.terminate();
+                //isConnected = false;
+                break;
+
+                default:
+                    Utils.menuClient();
+                    System.out.println("veuillez faire un choix entre les options 1 et 4.");
+
+                    break;
+            }
+        }
     }
 
     public static void sysconnexion(String type, ActorRef bankActor, Connexion con) {
@@ -50,7 +88,7 @@ public class App {
         String username = scanner.nextLine();
         if (Utils.isEmailValid(username)) {
 
-            System.out.println("Veuillez entrer le mot de passe du banquier:");
+            System.out.println("Veuillez entrer le mot de passe:");
             String password = scanner.nextLine();
             if (type.equals("client")) {
                 currentClient = con.loginClient(username, password);

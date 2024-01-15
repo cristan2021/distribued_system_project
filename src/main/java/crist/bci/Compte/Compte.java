@@ -63,12 +63,12 @@ public class Compte {
 
 
     public String toString() {
-        return "Compte{"+
+        return
             "numCompte='" + this.getNumCompte() + '\'' +
             ",solde='" + this.getSolde()+ '\'' +
             "id='" + this.getId() + '\'' +
-            ",uid='" + this.getUid() + '\'' +
-            '}';
+            ",uid='" + this.getUid() + '\'' 
+            ;
     }
   
 

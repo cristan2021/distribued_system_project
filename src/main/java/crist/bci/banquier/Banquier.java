@@ -55,12 +55,12 @@ public class Banquier extends Utilisateur {
      
         @Override
         public String toString() {
-            return "Banquier{" +
+            return 
                 ", nom='" + this.getNom()+ '\'' +
                 ", prenom='" + this.getPrenom() + '\'' +
                 ", mail='" + this.getNom() + '\'' +
-                ", adresse=" + this.getAddress() +
-                '}';
+                ", adresse=" + this.getAddress() 
+                ;
         }
 
        /* public static void main(String[] args) {

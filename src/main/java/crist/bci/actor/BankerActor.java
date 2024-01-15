@@ -18,12 +18,19 @@ import crist.bci.utils.Operation;
 public class BankerActor extends AbstractActor {
 
     private ActorRef bank;
+    private Database db;
     private LoggingAdapter log = getContext().getSystem().log();
     // private Database db;
     private ModelCompte modelCompte;
 
     public BankerActor(ActorRef bank) {
         this.bank = bank;
+        try {
+            this.db = new Database();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        this.modelCompte = new ModelCompte(db);
     }
 
     @Override
@@ -39,9 +46,11 @@ public class BankerActor extends AbstractActor {
                 .match(Operation.class, operation -> {
 
                     if (operation.getType().equals("depot")) {
-                        modelCompte.depôt(modelCompte.getCompte(operation.getUID()).getNumCompte(),
+                        
+                        modelCompte.depot(modelCompte.getCompte(operation.getUID()).getNumCompte(),
                                 operation.getMontant());
                         bank.tell(new Message("depot de " + operation.getMontant() + " effectué", "depot"), getSelf());
+    
                     } else if (operation.getType().equals("retrait")) {
                         if (modelCompte.getCompte(operation.getUID()).getSolde() < operation.getMontant()) {
                             bank.tell(new Message("solde insuffisant transaction refusé", "retrait"), getSelf());

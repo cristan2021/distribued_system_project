@@ -56,7 +56,7 @@ public class Client extends Utilisateur {
 
 
     public void depot(Client client, double amount) throws SQLException{
-        modelCompte.depôt(modelCompte.getCompte(client.getId()).getNumCompte(), amount);
+        modelCompte.depot(modelCompte.getCompte(client.getId()).getNumCompte(), amount);
     }
 
     public void retrait(Client client, double amount) throws SQLException{
@@ -71,11 +71,11 @@ public class Client extends Utilisateur {
     @Override
     public String toString() {
         return 
-            ", nom='" + this.getNom()+ '\'' +
+            " nom='" + this.getNom()+ '\'' +
             ", prenom='" + this.getPrenom() + '\'' +
             ", mail='" + this.getNom() + '\'' +
-            ", adresse=" + this.getAddress() +
-            '}';
+            ", adresse=" + this.getAddress() 
+            ;
     }
 
 }

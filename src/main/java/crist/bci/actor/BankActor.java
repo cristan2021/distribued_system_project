@@ -52,8 +52,10 @@ public class BankActor extends AbstractActor {
                 .match(Message.class, message -> {
                     if (getSender().equals(banker)) {
                         if (message.getType().equals("depot")) {
+                            log.info("message reçu du banquier: " + message.getMessage());
                             client.tell(message, getSelf());
                         } else if (message.getType().equals("retrait")) {
+                            log.info("message reçu du banquier: " + message.getMessage());
                             client.tell(message, getSelf());
                         } else {
                             System.out.println("operation inconnue");

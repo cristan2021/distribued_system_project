@@ -60,7 +60,7 @@ public class ModelCompte {
             }
         }
 
-        public void depôt(int numCompte, double amount) throws SQLException {
+        public void depot(int numCompte, double amount) throws SQLException {
             Database db = new Database();
             String sql = "UPDATE comptes SET solde = solde + ? WHERE numCompte = ?";
 
